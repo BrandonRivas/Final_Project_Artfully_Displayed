@@ -40,7 +40,9 @@ const NavBar = () => {
           </List>
         </div>
         <LoginDiv>
-          {!isAuthenticated ? (
+          {isLoading ? (
+            <Loading />
+          ) : !isAuthenticated ? (
             <>
               <LoginButton onClick={() => loginWithRedirect()}>
                 Login
@@ -48,14 +50,10 @@ const NavBar = () => {
             </>
           ) : (
             <UserContainer onClick={logoutClick}>
-              {isLoading ? (
-                <Loading />
-              ) : (
-                <UserInfo>
-                  {user?.name && <h2>{user.name.split(" ")[0]}</h2>}
-                  {user?.picture && <Img src={user.picture} />}
-                </UserInfo>
-              )}
+              <UserInfo>
+                {user?.name && <h2>{user.name.split(" ")[0]}</h2>}
+                {user?.picture && <Img src={user.picture} />}
+              </UserInfo>
               <div>
                 <LogoutButton isLogedin={isLogedin} onClick={() => logout()}>
                   logout

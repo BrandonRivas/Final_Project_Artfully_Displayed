@@ -13,7 +13,8 @@ const options = {
 };
 express();
 const getCollection = (request, response, next) => {
-  fetch(`https://www.rijksmuseum.nl/api/en/collection?key=${MUSEUM_KEY}`)
+  
+  fetch(`https://www.rijksmuseum.nl/api/en/collection?key=${MUSEUM_KEY}&p=1&ps=20`)
     .then((response) => response.json())
     .then((data) => {
       response.json(data);

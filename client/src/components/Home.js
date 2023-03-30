@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import SearchBar from "./SearchBar";
 const Home = () => {
   return (
     <>
       <Div>
-        <h1>HEY QUEEN</h1>
+        <SearchBar />
+        <SecondDiv></SecondDiv>
       </Div>
     </>
   );
@@ -11,9 +13,13 @@ const Home = () => {
 const Div = styled.div`
   border: 2px solid green;
   width: 96vw;
-  //110 is right to the bottom of the nav
-  margin-top: 165px;
+  height: 100%;
+  margin-top: 5.5vw;
   position: absolute;
   margin-left: 30px;
+`;
+const SecondDiv = styled.div`
+  border: 2px solid yellow;
+  height: 100%;
 `;
 export default Home;

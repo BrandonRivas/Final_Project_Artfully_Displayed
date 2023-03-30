@@ -67,9 +67,6 @@ const NavBar = () => {
   );
 };
 
-const LoadingDiv = styled.div`
-  position: absolute;
-`;
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
@@ -79,12 +76,26 @@ const Container = styled.div`
   margin-top: 30px;
   margin-left: 30px;
   border: 2px solid red;
+  z-index: 6;
 `;
 const ListTitle = styled.p`
   font-family: var(--font-headers);
-  font-size: 4vw;
+  font-size: 70px;
   opacity: 50%;
   transition: all 500ms cubic-bezier(0.3, 0.1, 0.3, 1);
+
+  @media screen and (max-width: 1800px) {
+    font-size: 60px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 50px;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 40px;
+  }
+
   :hover {
     opacity: 100%;
   }
@@ -105,8 +116,20 @@ const Links = styled(NavLink)`
 const Li = styled.li`
   margin-left: 15px;
   padding-bottom: 10px;
-  font-size: 1.2vw;
+  font-size: 23px;
   opacity: 50%;
+
+  @media screen and (max-width: 1800px) {
+    font-size: 20px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 18px;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 16px;
+  }
   :hover {
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -115,9 +138,21 @@ const Li = styled.li`
 `;
 
 const LoginDiv = styled.div`
-  font-size: 2vw;
+  font-size: 30px;
   opacity: 50%;
   transition: all 500ms cubic-bezier(0.3, 0.1, 0.3, 1);
+  /* Media query for screens smaller than 1800x994 */
+  @media screen and (max-width: 1800px) {
+    font-size: 26px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    font-size: 22px;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 18px;
+  }
   :hover {
     opacity: 100%;
   }

@@ -75,7 +75,7 @@ const Collection = () => {
                     ) : (
                       <Img src={object.webImage.url} alt="" />
                     )}
-                    {isAuthenticated && <OutlineHeart />}
+                    {isAuthenticated && object.webImage && <OutlineHeart />}
                     <Title>{object.title}</Title>
                     <Maker>{object.principalOrFirstMaker}</Maker>
                   </ArtContainer>

@@ -6,26 +6,33 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { FiHeart } from "react-icons/fi";
 
 const Collection = () => {
-  const [collection, setCollection] = useState();
   const { isAuthenticated } = useAuth0();
+  const [collection, setCollection] = useState();
+  const [searchValue, setSearchValue] = useState("");
+  const [radioButtonSelect, setRadioButtonSelect] = useState("");
   const [page, setPage] = useState(1);
-  //this currently works!
-  // useEffect(() => {
-  //   fetch("/collection")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setCollection(data.data.artObjects);
-  //     });
-  // }, []);
 
   useEffect(() => {
-    fetch(`/collection?p=${page}`)
+    let endpoint = `/collection?p=${page}`;
+
+    if (searchValue) {
+      endpoint = `/collection?p=${page}&q=${searchValue}`;
+    }
+
+    if (radioButtonSelect) {
+      endpoint = `/collection?p=${page}&type=${radioButtonSelect}`;
+    }
+
+    if (searchValue && radioButtonSelect) {
+      endpoint = `/collection?p=${page}&q=${searchValue}&type=${radioButtonSelect}`;
+    }
+    fetch(endpoint)
       .then((response) => response.json())
       .then((data) => {
         setCollection(data.data.artObjects);
       });
-  }, [page]);
-
+  }, [page, searchValue, radioButtonSelect]);
+  console.log(radioButtonSelect);
   const handlePreviousPage = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
@@ -43,11 +50,16 @@ const Collection = () => {
       behavior: "smooth",
     });
   };
+
   return (
     <>
       <Div>
         <H1>The Collection</H1>
-        <SearchBar />
+        <SearchBar
+          setSearchValue={setSearchValue}
+          setRadioButtonSelect={setRadioButtonSelect}
+          setPage={setPage}
+        />
         {!collection ? (
           <LoadingDiv>
             <Loading />
@@ -58,7 +70,11 @@ const Collection = () => {
               {collection.map((object) => {
                 return (
                   <ArtContainer key={object.id}>
-                    <Img src={object.webImage.url} alt="" />
+                    {object.webImage === null ? (
+                      <Img src="/sorry.png" />
+                    ) : (
+                      <Img src={object.webImage.url} alt="" />
+                    )}
                     {isAuthenticated && <OutlineHeart />}
                     <Title>{object.title}</Title>
                     <Maker>{object.principalOrFirstMaker}</Maker>
@@ -115,26 +131,46 @@ const LoadingDiv = styled.div`
   justify-content: center;
 `;
 const SecondDiv = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
-  padding-left: 30px;
-  padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding-top: 15px;
 `;
 
 const ArtContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 450px;
+  width: 385px;
+
+  @media screen and (max-width: 1200px) {
+    height: 350px;
+  }
+  @media screen and (max-width: 1150px) {
+    height: 370px;
+  }
+  @media screen and (max-width: 768px) {
+    height: 290px;
+  }
 `;
 
 const Img = styled.img`
-  width: 20vw;
+  width: 380px;
   height: 400px;
   object-fit: cover;
   object-position: top;
+  @media screen and (max-width: 1200px) {
+    width: 280px;
+    height: 300px;
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 215px;
+    height: 226px;
+  }
 `;
 
 const Title = styled.h2`

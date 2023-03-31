@@ -1,20 +1,34 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { BiSearchAlt } from "react-icons/bi";
-const SearchBar = () => {
+import { MdClear } from "react-icons/md";
+const SearchBar = ({ setSearchValue, setRadioButtonSelect, setPage }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [value, setValue] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("");
 
   const advancedClick = () => {
     setIsClicked(!isClicked);
   };
 
   const handleClick = () => {
-    setValue("");
+    setSearchValue(value);
+    setRadioButtonSelect(selectedFilter);
   };
   const searchHandler = (value) => {
     setValue(value);
   };
+
+  const clearClick = () => {
+    setValue("");
+    setSelectedFilter("");
+    setPage(1);
+  };
+
+  const handleFilterChange = (event) => {
+    setSelectedFilter(event.target.value);
+  };
+
   return (
     <>
       <Warapper>
@@ -26,14 +40,27 @@ const SearchBar = () => {
               placeholder="Search"
               value={value}
               onChange={(ev) => searchHandler(ev.target.value)}
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  handleClick(ev.target.value);
+                }
+              }}
             />
+            <Clear onClick={clearClick} />
           </SearchDiv>
           <Button onClick={handleClick}>search</Button>
           <FilterButton onClick={advancedClick}>Advances Filters</FilterButton>
         </SearchBarDiv>
         <FilterDiv isClicked={isClicked}>
           <RadioDiv>
-            <input type="radio" id="drawing" name="filter" value="drawing" />
+            <input
+              type="radio"
+              id="drawing"
+              name="filter"
+              value="drawing"
+              checked={selectedFilter === "drawing"}
+              onChange={handleFilterChange}
+            />
             <label htmlFor="drawing">Drawing</label>
           </RadioDiv>
           <RadioDiv>
@@ -42,15 +69,31 @@ const SearchBar = () => {
               id="furniture"
               name="filter"
               value="furniture"
+              checked={selectedFilter === "furniture"}
+              onChange={handleFilterChange}
             />
             <label htmlFor="furniture">Furniture</label>
           </RadioDiv>
           <RadioDiv>
-            <input type="radio" id="painting" name="filter" value="painting" />
+            <input
+              type="radio"
+              id="painting"
+              name="filter"
+              value="painting"
+              checked={selectedFilter === "painting"}
+              onChange={handleFilterChange}
+            />
             <label htmlFor="painting">Painting</label>
           </RadioDiv>
           <RadioDiv>
-            <input type="radio" id="paper" name="filter" value="paper" />
+            <input
+              type="radio"
+              id="paper"
+              name="filter"
+              value="paper"
+              checked={selectedFilter === "paper"}
+              onChange={handleFilterChange}
+            />
             <label htmlFor="paper">Paper</label>
           </RadioDiv>
           <RadioDiv>
@@ -59,6 +102,8 @@ const SearchBar = () => {
               id="porcelain"
               name="filter"
               value="porcelain"
+              checked={selectedFilter === "porcelain"}
+              onChange={handleFilterChange}
             />
             <label htmlFor="porcelain">Porcelain</label>
           </RadioDiv>
@@ -68,6 +113,8 @@ const SearchBar = () => {
               id="sculpture"
               name="filter"
               value="sculpture"
+              checked={selectedFilter === "sculpture"}
+              onChange={handleFilterChange}
             />
             <label htmlFor="sculpture">Sculpture</label>
           </RadioDiv>
@@ -77,6 +124,8 @@ const SearchBar = () => {
               id="stoneware"
               name="filter"
               value="stoneware"
+              checked={selectedFilter === "stoneware"}
+              onChange={handleFilterChange}
             />
             <label htmlFor="stoneware">Stoneware</label>
           </RadioDiv>
@@ -118,6 +167,19 @@ const SearchLoop = styled(BiSearchAlt)`
   margin-left: 10px;
   margin-right: 3px;
   font-size: 20px;
+`;
+
+const Clear = styled(MdClear)`
+  color: var(--color-raisin-black);
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 20px;
+  padding: 0.5vh;
+  cursor: pointer;
+  :hover {
+    background: var(--color-keppel);
+    border-radius: 50%;
+  }
 `;
 const Input = styled.input`
   width: 45vw;

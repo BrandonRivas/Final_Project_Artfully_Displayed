@@ -6,6 +6,7 @@ import { HiOutlineLightBulb } from "react-icons/hi";
 const LandingPage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isSpotlightOn, setIsSpotlightOn] = useState(true);
+
   const navigate = useNavigate();
 
   const handleMouseMove = (event) => {

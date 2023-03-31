@@ -1,6 +1,6 @@
 "use strict";
 const { MongoClient } = require("mongodb");
-const express = require("express");
+
 
 require("dotenv").config({ path: "../.env" });
 
@@ -11,8 +11,8 @@ const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
-express();
-const getCollection = async (request, response, next) => {
+
+const getCollection = async (request, response) => {
   try {
     const { p, q, type } = request.query;
     let endpoint = `https://www.rijksmuseum.nl/api/en/collection?key=${MUSEUM_KEY}&p=${p}&ps=20`;

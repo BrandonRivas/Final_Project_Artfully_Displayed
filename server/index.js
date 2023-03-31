@@ -8,7 +8,7 @@ const { getCollection } = require("./handlers");
 express()
   .use(morgan("tiny"))
   .use(express.json())
-  .get("/home", getCollection)
+  .get("/collection", getCollection)
 
   .get("*", (req, res) => {
     res.status(404).json({

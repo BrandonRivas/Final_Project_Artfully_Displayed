@@ -29,12 +29,12 @@ const NavBar = () => {
             <Links to="/" onClick={handleClick}>
               <Li>Home</Li>
             </Links>
-            <Links to="/home" onClick={handleClick}>
+            <Links to="/collection" onClick={handleClick}>
               <Li>Search</Li>
             </Links>
             {isAuthenticated && (
               <Links>
-                <Li>Collection</Li>
+                <Li>My Gallery</Li>
               </Links>
             )}
           </List>
@@ -75,7 +75,7 @@ const Container = styled.div`
   position: absolute;
   margin-top: 30px;
   margin-left: 30px;
-  border: 2px solid red;
+  /* border: 2px solid red; */
   z-index: 6;
 `;
 const ListTitle = styled.p`

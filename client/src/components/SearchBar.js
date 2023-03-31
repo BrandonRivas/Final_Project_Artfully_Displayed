@@ -15,9 +15,6 @@ const SearchBar = () => {
   const searchHandler = (value) => {
     setValue(value);
   };
-
-  
-  console.log(value)
   return (
     <>
       <Warapper>
@@ -131,9 +128,7 @@ const Input = styled.input`
 `;
 const Button = styled.button`
   padding: 1.5vh 2vw;
-  border-radius: 10px;
   border: none;
-  background-color: var(--color-burnt-orange);
   font-size: 15px;
   margin-left: 7px;
   margin-right: 7px;
@@ -145,6 +140,7 @@ const FilterButton = styled.button`
   border: none;
   font-size: 14px;
   text-decoration: underline;
+  text-underline-offset: 4px;
   color: var(--color-keppel);
   cursor: pointer;
 `;

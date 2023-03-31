@@ -18,7 +18,7 @@ const LandingPage = () => {
 
   const handleButton = (event) => {
     event.preventDefault();
-    navigate("/home");
+    navigate("/collection");
   };
   return (
     <>

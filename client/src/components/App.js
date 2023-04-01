@@ -3,6 +3,7 @@ import GlobalStyles from "../GlobalStyles";
 import LandingPage from "./LandingPage";
 import Collection from "./Collection";
 import NavBar from "./NavBar";
+import MyCollection from "./MyCollection";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/collection" element={<Collection />} />
+        <Route path="/mycollection" element={<MyCollection />} />
         <Route path="" element={<h1>404: Oops!</h1>} />
       </Routes>
     </BrowserRouter>

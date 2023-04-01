@@ -14,6 +14,7 @@ const SearchBar = ({ setSearchValue, setRadioButtonSelect, setPage }) => {
   const handleClick = () => {
     setSearchValue(value);
     setRadioButtonSelect(selectedFilter);
+    setPage(1);
   };
   const searchHandler = (value) => {
     setValue(value);
@@ -49,7 +50,7 @@ const SearchBar = ({ setSearchValue, setRadioButtonSelect, setPage }) => {
             <Clear onClick={clearClick} />
           </SearchDiv>
           <Button onClick={handleClick}>search</Button>
-          <FilterButton onClick={advancedClick}>Advances Filters</FilterButton>
+          <FilterButton onClick={advancedClick}>Advanced Filters</FilterButton>
         </SearchBarDiv>
         <FilterDiv isClicked={isClicked}>
           <RadioDiv>

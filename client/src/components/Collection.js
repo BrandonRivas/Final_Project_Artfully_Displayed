@@ -67,20 +67,31 @@ const Collection = () => {
         ) : (
           <>
             <SecondDiv>
-              {collection.map((object) => {
-                return (
-                  <ArtContainer key={object.id}>
-                    {object.webImage === null ? (
-                      <Img src="/sorry.png" />
-                    ) : (
-                      <Img src={object.webImage.url} alt="" />
-                    )}
-                    {isAuthenticated && object.webImage && <OutlineHeart />}
-                    <Title>{object.title}</Title>
-                    <Maker>{object.principalOrFirstMaker}</Maker>
-                  </ArtContainer>
-                );
-              })}
+              {collection.length === 0 ? (
+                <div>
+                  <Sorry>
+                    Sorry we could not find any results with {searchValue} in{" "}
+                    {radioButtonSelect}
+                  </Sorry>
+                </div>
+              ) : (
+                <>
+                  {collection.map((object) => {
+                    return (
+                      <ArtContainer key={object.id}>
+                        {object.webImage === null ? (
+                          <Img src="/sorry.png" />
+                        ) : (
+                          <Img src={object.webImage.url} alt="" />
+                        )}
+                        {isAuthenticated && object.webImage && <OutlineHeart />}
+                        <Title>{object.title}</Title>
+                        <Maker>{object.principalOrFirstMaker}</Maker>
+                      </ArtContainer>
+                    );
+                  })}
+                </>
+              )}
             </SecondDiv>
             <DirectionDiv>
               <DirectionButtonPrev
@@ -90,7 +101,10 @@ const Collection = () => {
                 Previous
               </DirectionButtonPrev>
               <PageNumber>Page {page}</PageNumber>
-              <DirectionButtonNext onClick={handleNextPage}>
+              <DirectionButtonNext
+                onClick={handleNextPage}
+                disabled={collection.length < 19}
+              >
                 Next
               </DirectionButtonNext>
             </DirectionDiv>
@@ -202,6 +216,9 @@ const DirectionButtonPrev = styled.button`
 `;
 const DirectionButtonNext = styled.button`
   padding: 10px 42px;
+  :disabled {
+    opacity: 50%;
+  }
 `;
 const DirectionDiv = styled.div`
   display: flex;
@@ -213,5 +230,11 @@ const DirectionDiv = styled.div`
 const PageNumber = styled.div`
   margin-left: 20px;
   margin-right: 20px;
+`;
+
+const Sorry = styled.p`
+  font-size: 20px;
+  margin-top: 20px;
+  font-family: var(--font-headers);
 `;
 export default Collection;

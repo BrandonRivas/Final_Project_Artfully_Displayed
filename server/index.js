@@ -4,11 +4,19 @@
 const express = require("express");
 const morgan = require("morgan");
 
-const { getCollection } = require("./handlers");
+const {
+  getCollection,
+  getComments,
+  postComments,
+  deleteComment,
+} = require("./handlers");
 express()
   .use(morgan("tiny"))
   .use(express.json())
   .get("/collection", getCollection)
+  .get("/comments", getComments)
+  .post("/comments", postComments)
+  .delete("/comments/:id", deleteComment)
 
   .get("*", (req, res) => {
     res.status(404).json({

@@ -32,7 +32,7 @@ const Collection = () => {
         setCollection(data.data.artObjects);
       });
   }, [page, searchValue, radioButtonSelect]);
-  console.log(radioButtonSelect);
+
   const handlePreviousPage = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
@@ -51,6 +51,7 @@ const Collection = () => {
     });
   };
 
+  
   return (
     <>
       <Div>

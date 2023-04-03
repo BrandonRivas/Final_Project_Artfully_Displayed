@@ -57,11 +57,11 @@ table {
 }
 h1,h2,h3,h4,h5,h6{
   font-family: var(--font-headers);
-  color: var(--color-old-lace)
+  color: var(--color-old-lace);
 }
 p,span,button,div,input{
   font-family: var(--font-all);
-  color: var(--color-old-lace)
+  color: var(--color-old-lace);
 }
 button{
   background-color: var(--color-burnt-orange);

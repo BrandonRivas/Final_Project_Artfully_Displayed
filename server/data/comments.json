@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Samantha Wright",
+    "user": "swright",
+    "_id": "12345",
+    "imageSrc": "https://api.dicebear.com/6.x/open-peeps/svg?seed=Sammy",
+    "comment": "I really enjoyed the online art exhibition! The virtual gallery was beautifully designed and the art pieces were absolutely stunning."
+  },
+  {
+    "name": "Mark Johnson",
+    "user": "mjohnson",
+    "_id": "23456",
+    "imageSrc": "https://api.dicebear.com/6.x/open-peeps/svg?seed=Muffin",
+    "comment": "The online art exhibition was a great experience. I appreciated the variety of art styles and mediums on display, and the ability to view the art from the comfort of my own home."
+  },
+  {
+    "name": "Lila Patel",
+    "user": "lpatel",
+    "_id": "34567",
+    "imageSrc": "https://api.dicebear.com/6.x/open-peeps/svg?seed=Oscar",
+    "comment": "I was pleasantly surprised by how immersive the online art exhibition was! The interactive features really made me feel like I was walking through a physical gallery."
+  },
+  {
+    "name": "David Kim",
+    "user": "dkim",
+    "_id": "45678",
+    "imageSrc": "https://api.dicebear.com/6.x/open-peeps/svg?seed=Bella",
+    "comment": "The online art exhibition was a great way to discover new artists and art styles. I appreciated the curator's selections and found many pieces that I would love to purchase for my own collection."
+  },
+  {
+    "name": "Rachel Chen",
+    "user": "rchen",
+    "_id": "56789",
+    "imageSrc": "https://api.dicebear.com/6.x/open-peeps/svg?seed=Samantha",
+    "comment": "I loved the online art exhibition! It was a great way to spend a lazy Sunday afternoon, browsing through beautiful art pieces and learning more about different artists."
+  }
+]

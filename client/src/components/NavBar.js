@@ -33,7 +33,7 @@ const NavBar = () => {
               <Li>Search</Li>
             </Links>
             {isAuthenticated && (
-              <Links>
+              <Links to="/mycollection" onClick={handleClick}>
                 <Li>My Gallery</Li>
               </Links>
             )}

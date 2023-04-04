@@ -1,8 +1,8 @@
 "use strict";
+const { response } = require("express");
 const { MongoClient } = require("mongodb");
 
 require("dotenv").config({ path: "../.env" });
-
 
 const MONGO_URI = process.env.MONGO_URI;
 const MUSEUM_KEY = process.env.MUSEUM_API_KEY;
@@ -27,8 +27,7 @@ const getCollection = async (request, response) => {
     if (q && type) {
       endpoint = `https://www.rijksmuseum.nl/api/en/collection?key=${MUSEUM_KEY}&q=${q}&type=${type}&p=${p}&ps=20`;
     }
-    console.log(request.query);
-    const fetch = await import('node-fetch');
+    const fetch = await import("node-fetch");
     const result = await fetch.default(endpoint);
     const data = await result.json();
     return response.status(200).json({ status: 200, data });
@@ -38,6 +37,20 @@ const getCollection = async (request, response) => {
   }
 };
 
+const getSingleObject = async (request, response) => {
+  const objectId = request.params.id;
+  try {
+    const fetch = await import("node-fetch");
+    const result = await fetch.default(
+      `https://www.rijksmuseum.nl/api/en/collection/${objectId}?key=${MUSEUM_KEY}`
+    );
+    const data = await result.json();
+    return response.status(200).json({ status: 200, data });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  }
+};
 const getComments = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -103,4 +116,10 @@ const deleteComment = async (request, response) => {
     client.close();
   }
 };
-module.exports = { getCollection, getComments, postComments, deleteComment };
+module.exports = {
+  getCollection,
+  getSingleObject,
+  getComments,
+  postComments,
+  deleteComment,
+};

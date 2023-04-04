@@ -6,6 +6,7 @@ const morgan = require("morgan");
 
 const {
   getCollection,
+  getSingleObject,
   getComments,
   postComments,
   deleteComment,
@@ -14,6 +15,7 @@ express()
   .use(morgan("tiny"))
   .use(express.json())
   .get("/collection", getCollection)
+  .get("/collection/:id", getSingleObject)
   .get("/comments", getComments)
   .post("/comments", postComments)
   .delete("/comments/:id", deleteComment)

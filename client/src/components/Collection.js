@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Loading from "./Loading";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FiHeart } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Collection = () => {
   const { isAuthenticated } = useAuth0();
@@ -11,6 +12,7 @@ const Collection = () => {
   const [searchValue, setSearchValue] = useState("");
   const [radioButtonSelect, setRadioButtonSelect] = useState("");
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
@@ -30,6 +32,9 @@ const Collection = () => {
       .then((response) => response.json())
       .then((data) => {
         setCollection(data.data.artObjects);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, [page, searchValue, radioButtonSelect]);
 
@@ -51,7 +56,10 @@ const Collection = () => {
     });
   };
 
-  
+  const handleClick = (objectId) => {
+    window.open(`/collection/${objectId}`);
+  };
+
   return (
     <>
       <Div>
@@ -79,7 +87,10 @@ const Collection = () => {
                 <>
                   {collection.map((object) => {
                     return (
-                      <ArtContainer key={object.id}>
+                      <ArtContainer
+                        key={object.id}
+                        onClick={() => handleClick(object.objectNumber)}
+                      >
                         {object.webImage === null ? (
                           <Img src="/sorry.png" />
                         ) : (

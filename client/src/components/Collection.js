@@ -4,27 +4,24 @@ import React, { useEffect, useState } from "react";
 import Loading from "./Loading";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FiHeart } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+
 
 const Collection = () => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, user} = useAuth0();
   const [collection, setCollection] = useState();
   const [searchValue, setSearchValue] = useState("");
   const [radioButtonSelect, setRadioButtonSelect] = useState("");
   const [page, setPage] = useState(1);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
-
     if (searchValue) {
       endpoint = `/collection?p=${page}&q=${searchValue}`;
     }
-
     if (radioButtonSelect) {
       endpoint = `/collection?p=${page}&type=${radioButtonSelect}`;
     }
-
     if (searchValue && radioButtonSelect) {
       endpoint = `/collection?p=${page}&q=${searchValue}&type=${radioButtonSelect}`;
     }
@@ -56,10 +53,29 @@ const Collection = () => {
     });
   };
 
-  const handleClick = (objectId) => {
+  const handleClick = (event, objectId) => {
     window.open(`/collection/${objectId}`);
   };
 
+  const handleLike = (object) => {
+    fetch(`/mycollection/${user.sub}`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        favorite: object,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <>
       <Div>
@@ -87,18 +103,31 @@ const Collection = () => {
                 <>
                   {collection.map((object) => {
                     return (
-                      <ArtContainer
-                        key={object.id}
-                        onClick={() => handleClick(object.objectNumber)}
-                      >
-                        {object.webImage === null ? (
-                          <Img src="/sorry.png" />
-                        ) : (
-                          <Img src={object.webImage.url} alt="" />
+                      <ArtContainer key={object.id}>
+                        <div
+                          onClick={(event) =>
+                            handleClick(event, object.objectNumber)
+                          }
+                        >
+                          {object.webImage === null ? (
+                            <Img src="/sorry.png" />
+                          ) : (
+                            <Img src={object.webImage.url} alt="" />
+                          )}
+                        </div>
+                        {isAuthenticated && object.webImage && (
+                          <OutlineHeart
+                            onClick={() => handleLike(object)}
+                          />
                         )}
-                        {isAuthenticated && object.webImage && <OutlineHeart />}
-                        <Title>{object.title}</Title>
-                        <Maker>{object.principalOrFirstMaker}</Maker>
+                        <div
+                          onClick={(event) =>
+                            handleClick(event, object.objectNumber)
+                          }
+                        >
+                          <Title>{object.title}</Title>
+                          <Maker>{object.principalOrFirstMaker}</Maker>
+                        </div>
                       </ArtContainer>
                     );
                   })}
@@ -161,7 +190,7 @@ const SecondDiv = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   padding-top: 15px;
 `;
 
@@ -169,7 +198,7 @@ const ArtContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 450px;
+  height: 455px;
   width: 385px;
 
   @media screen and (max-width: 1200px) {
@@ -208,10 +237,11 @@ const Title = styled.h2`
 `;
 const Maker = styled.p`
   font-style: italic;
+  text-align: center;
 `;
 
 const OutlineHeart = styled(FiHeart)`
-  font-size: 25px;
+  font-size: 20px;
   margin-top: -30px;
   margin-left: 350px;
   :hover {

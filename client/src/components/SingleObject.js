@@ -46,11 +46,15 @@ const SingleObject = () => {
         </LoadingDiv>
       ) : (
         <div>
-          <Img
-            src={object.webImage.url}
-            alt={`${object.id}'s image`}
-            enlarged={enlarged}
-          />
+          {object.webImage === null ? (
+            <Img src="/sorry.png" />
+          ) : (
+            <Img
+              src={object.webImage.url}
+              alt={`${object.id}'s image`}
+              enlarged={enlarged}
+            />
+          )}
           <ButtonDiv>
             <Button onClick={handleEnlargeClick}>
               {enlarged ? "Shrink" : "Enlarge"}

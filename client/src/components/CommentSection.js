@@ -66,6 +66,7 @@ const CommentSection = () => {
       ) : (
         <div>
           <CommentWrapper>
+            <H2>Comment Section</H2>
             {comments.map((info) => {
               return (
                 <CommentsDiv key={info._id}>
@@ -185,4 +186,8 @@ const DeleteButton = styled.button`
   }
 `;
 
+const H2 = styled.h2`
+  opacity: 50%;
+  font-size: 25px;
+`;
 export default CommentSection;

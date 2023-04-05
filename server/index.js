@@ -10,6 +10,9 @@ const {
   getComments,
   postComments,
   deleteComment,
+  createCollection,
+  getMyCollection,
+  addToCollection,
 } = require("./handlers");
 express()
   .use(morgan("tiny"))
@@ -17,7 +20,10 @@ express()
   .get("/collection", getCollection)
   .get("/collection/:id", getSingleObject)
   .get("/comments", getComments)
+  .get("/mycollection/:id", getMyCollection)
+  .patch("/mycollection/:id", addToCollection)
   .post("/comments", postComments)
+  .post("/collection", createCollection)
   .delete("/comments/:id", deleteComment)
 
   .get("*", (req, res) => {

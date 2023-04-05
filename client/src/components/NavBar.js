@@ -19,7 +19,6 @@ const NavBar = () => {
     setIsLogedin(!isLogedin);
     setIsClicked(false);
   };
-
   return (
     <>
       <Container>

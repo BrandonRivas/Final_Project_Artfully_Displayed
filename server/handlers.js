@@ -97,6 +97,98 @@ const postComments = async (request, response) => {
   }
 };
 
+const createCollection = async (request, response) => {
+  const client = new MongoClient(MONGO_URI, options);
+  const db = client.db("Website_Db");
+  const { _id, favorite, collection } = request.body;
+  try {
+    const existingExhibit = await db.collection("exhibit").findOne({ _id });
+    if (existingExhibit) {
+      return response.status(406).json({
+        status: 406,
+        message: "You've already created an exhibit",
+      });
+    }
+
+    const newExhibit = await db
+      .collection("exhibit")
+      .insertOne({ _id, favorite, collection });
+    return response.status(200).json({
+      status: 200,
+      message: "Your exhibit has been created",
+      data: newExhibit,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  } finally {
+    client.close();
+  }
+};
+
+const getMyCollection = async (request, response) => {
+  const client = new MongoClient(MONGO_URI, options);
+  const db = client.db("Website_Db");
+  const { id } = request.params;
+  try {
+    const myCollection = await db
+      .collection("exhibit")
+      .find({ _id: id })
+      .toArray();
+    if (myCollection.length === 0) {
+      response.status(404).json({
+        status: 404,
+        data: myCollection,
+        message: "Your Collection was not found",
+      });
+    } else {
+      response.status(200).json({
+        status: 200,
+        data: myCollection,
+        message: "Found your collection",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  } finally {
+    client.close();
+  }
+};
+
+const addToCollection = async (request, response) => {
+  const client = new MongoClient(MONGO_URI, options);
+  const db = client.db("Website_Db");
+  const { id } = request.params;
+  const { favorite } = request.body;
+  try {
+    const result = await db
+      .collection("exhibit")
+      .updateOne(
+        { _id: id },
+        { $push: { favorite: favorite } }
+      );
+    if (result.matchedCount === 0) {
+      response.status(404).json({
+        status: 404,
+        data: result,
+        message: "Your Collection was not found",
+      });
+    } else {
+      response.status(200).json({
+        status: 200,
+        data: result,
+        message: "Favorite added to collection",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  } finally {
+    client.close();
+  }
+};
+
 const deleteComment = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -122,4 +214,7 @@ module.exports = {
   getComments,
   postComments,
   deleteComment,
+  createCollection,
+  getMyCollection,
+  addToCollection,
 };

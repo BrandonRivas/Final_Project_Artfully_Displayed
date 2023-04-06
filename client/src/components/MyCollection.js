@@ -3,13 +3,17 @@ import { useAuth0 } from "@auth0/auth0-react";
 import styled from "styled-components";
 import CommentSection from "./CommentSection";
 import Loading from "./Loading";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import { GiHamburgerMenu } from "react-icons/gi";
 
-const MyCollection = () => {
+const MyCollection = ({ favorite, setFavorite }) => {
   const { isLoading, isAuthenticated, user } = useAuth0();
-  const [status, setStatus] = useState();
   const [posted, setPosted] = useState(false);
-  const [favorite, setFavorite] = useState();
   const [showButton, setShowButton] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [rerender, setRerender] = useState(false);
+ 
 
   const createCollection = () => {
     fetch("/collection", {
@@ -38,21 +42,61 @@ const MyCollection = () => {
       fetch(`/mycollection/${user.sub}`)
         .then((response) => response.json())
         .then((data) => {
-          setStatus(data.status);
           setFavorite(data.data[0].favorite);
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [user, status, posted]);
+  }, [user, posted, rerender, setFavorite]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
-    }, 1000);
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  const showMenu = () => {
+    setHidden(!hidden);
+    setIsEditMode(false);
+  };
+
+  const handleEditClick = () => {
+    setIsEditMode(!isEditMode);
+  };
+  const handleDelete = (objectId) => {
+    fetch(`/mycollection/${user.sub}/${objectId}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setRerender(!rerender);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const deleteAll = () => {
+    fetch(`/mycollection/${user.sub}`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setFavorite([]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <Wrapper>
       <TitleDiv>
@@ -68,6 +112,7 @@ const MyCollection = () => {
             </LoginDiv>
           ) : (
             <>
+              {}
               {!favorite ? (
                 <>
                   <Loading />
@@ -76,7 +121,7 @@ const MyCollection = () => {
                       <NoLikes>
                         It doesn't look like you have a collection yet!{" "}
                       </NoLikes>
-                      <StartButton status={status} onClick={createCollection}>
+                      <StartButton onClick={createCollection}>
                         Click here to get started
                       </StartButton>
                     </>
@@ -91,13 +136,28 @@ const MyCollection = () => {
                     </NoLikes>
                   ) : (
                     <>
+                      <ButtonDiv hidden={hidden}>
+                        <Edit onClick={handleEditClick}>Edit</Edit>
+                        <DeleteAllButton onClick={deleteAll}>
+                          Delete All
+                        </DeleteAllButton>
+                      </ButtonDiv>
+                      <MenuDiv>
+                        <Menu onClick={showMenu} />
+                      </MenuDiv>
                       <CollectionDiv>
                         {favorite.map((object) => {
                           return (
                             <IndividualDiv key={object.id}>
+                              {isEditMode && (
+                                <Garbage
+                                  onClick={() => handleDelete(object.id)}
+                                />
+                              )}
+
                               <Img src={object.webImage.url} />
                               <TextDiv>
-                                <p>{object.longTitle}</p>
+                                <Title>{object.longTitle}</Title>
                                 <p>{object.principalOrFirstMaker}</p>
                                 <p>Object number: {object.objectNumber}</p>
                               </TextDiv>
@@ -105,7 +165,7 @@ const MyCollection = () => {
                           );
                         })}
                       </CollectionDiv>
-                      <CommentSection />
+                      <CommentSection isEditMode={isEditMode} />
                     </>
                   )}
                 </>
@@ -119,7 +179,6 @@ const MyCollection = () => {
 };
 
 const Wrapper = styled.div`
-  border: 2px solid red;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -202,5 +261,47 @@ const NoLikes = styled.p`
   margin-top: 30px;
   font-size: 20px;
   margin-bottom: 10px;
+`;
+
+const Garbage = styled(MdOutlineDeleteOutline)`
+  font-size: 20px;
+  position: absolute;
+  margin-left: 23vw;
+  margin-top: 10px;
+  background-color: rgba(41, 115, 115, 0.8);
+  padding: 2px;
+  border-radius: 5px;
+`;
+
+const MenuDiv = styled.div`
+  position: absolute;
+  top: 50px;
+  margin-left: 540px;
+  z-index: 6;
+`;
+const Menu = styled(GiHamburgerMenu)`
+  font-size: 20px;
+  opacity: 50%;
+  transition: opacity 500ms cubic-bezier(0.3, 0.1, 0.3, 1);
+  :hover {
+    opacity: 100%;
+  }
+`;
+const ButtonDiv = styled.div`
+  display: flex;
+  display: ${(props) => (props.hidden ? "inline" : "none")};
+`;
+const Edit = styled.button`
+  padding: 10px 20px;
+`;
+const DeleteAllButton = styled.button`
+  padding: 10px 20px;
+  margin-left: 10px;
+`;
+
+const Title = styled.p`
+  font-family: var(--font-headers);
+  margin-bottom: 5px;
+  margin-top: 2px;
 `;
 export default MyCollection;

@@ -13,6 +13,8 @@ const {
   createCollection,
   getMyCollection,
   addToCollection,
+  deleteSingleObject,
+  deleteWholeCollection,
 } = require("./handlers");
 express()
   .use(morgan("tiny"))
@@ -25,6 +27,8 @@ express()
   .post("/comments", postComments)
   .post("/collection", createCollection)
   .delete("/comments/:id", deleteComment)
+  .delete("/mycollection/:id/:objectId", deleteSingleObject)
+  .delete("/mycollection/:id", deleteWholeCollection)
 
   .get("*", (req, res) => {
     res.status(404).json({

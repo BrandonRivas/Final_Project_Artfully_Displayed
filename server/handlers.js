@@ -136,10 +136,10 @@ const getMyCollection = async (request, response) => {
       .find({ _id: id })
       .toArray();
     if (myCollection.length === 0) {
-      response.status(404).json({
-        status: 404,
-        data: myCollection,
-        message: "Your Collection was not found",
+      response.status(204).json({
+        status: 204,
+        data: null,
+        message: "It appears you don't have a collection",
       });
     } else {
       response.status(200).json({
@@ -164,10 +164,7 @@ const addToCollection = async (request, response) => {
   try {
     const result = await db
       .collection("exhibit")
-      .updateOne(
-        { _id: id },
-        { $push: { favorite: favorite } }
-      );
+      .updateOne({ _id: id }, { $push: { favorite: favorite } });
     if (result.matchedCount === 0) {
       response.status(404).json({
         status: 404,
@@ -208,6 +205,62 @@ const deleteComment = async (request, response) => {
     client.close();
   }
 };
+
+const deleteSingleObject = async (request, response) => {
+  console.log("this is your delete params", request.params);
+  const client = new MongoClient(MONGO_URI, options);
+  const db = client.db("Website_Db");
+  const { id, objectId } = request.params;
+  try {
+    const result = await db
+      .collection("exhibit")
+      .updateOne({ _id: id }, { $pull: { favorite: { id: objectId } } });
+    if (result.matchedCount === 0) {
+      response.status(404).json({
+        status: 404,
+        data: result,
+        message: "Your Collection was not found",
+      });
+    } else {
+      response.status(200).json({
+        status: 200,
+        data: result,
+        message: "Favorite was deleted from the collection",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  } finally {
+    client.close();
+  }
+};
+const deleteWholeCollection = async (request, response) => {
+  const client = new MongoClient(MONGO_URI, options);
+  const db = client.db("Website_Db");
+  const { id } = request.params;
+  try {
+    const result = await db
+      .collection("exhibit")
+      .updateOne({ _id: id }, { $set: { favorite: [] } });
+    if (result.modifiedCount > 0) {
+      response.status(200).json({
+        status: 200,
+        message: "You've deleted the whole collection",
+      });
+    } else {
+      response
+        .status(404)
+        .json({ message: "Could not delete your collection" });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  } finally {
+    client.close();
+  }
+};
+
 module.exports = {
   getCollection,
   getSingleObject,
@@ -217,4 +270,6 @@ module.exports = {
   createCollection,
   getMyCollection,
   addToCollection,
+  deleteSingleObject,
+  deleteWholeCollection,
 };

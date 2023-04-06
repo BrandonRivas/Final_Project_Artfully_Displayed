@@ -5,14 +5,13 @@ import Loading from "./Loading";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FiHeart } from "react-icons/fi";
 
-
-const Collection = () => {
-  const { isAuthenticated, user} = useAuth0();
+const Collection = ({ favorite, setFavorite }) => {
+  const { isAuthenticated, user } = useAuth0();
   const [collection, setCollection] = useState();
   const [searchValue, setSearchValue] = useState("");
   const [radioButtonSelect, setRadioButtonSelect] = useState("");
   const [page, setPage] = useState(1);
-
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
@@ -34,6 +33,39 @@ const Collection = () => {
         console.log(error);
       });
   }, [page, searchValue, radioButtonSelect]);
+
+  const handleLike = (object) => {
+    fetch(`/mycollection/${user.sub}`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        favorite: object,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setLiked(!liked);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch(`/mycollection/${user.sub}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFavorite(data.data[0].favorite);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [setFavorite, isAuthenticated, user, liked]);
 
   const handlePreviousPage = () => {
     if (page > 1) {
@@ -57,25 +89,17 @@ const Collection = () => {
     window.open(`/collection/${objectId}`);
   };
 
-  const handleLike = (object) => {
-    fetch(`/mycollection/${user.sub}`, {
-      method: "PATCH",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        favorite: object,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const isObjectInFav = (objectId) => {
+    if (favorite) {
+      const foundItem = favorite.find((item) => item.id === objectId);
+      if (!foundItem) {
+        return false;
+      }
+      return true;
+    }
+    return false;
   };
+
   return (
     <>
       <Div>
@@ -116,16 +140,23 @@ const Collection = () => {
                           )}
                         </div>
                         {isAuthenticated && object.webImage && (
-                          <OutlineHeart
+                          <TestButton
+                            disabled={isObjectInFav(object.id)}
                             onClick={() => handleLike(object)}
-                          />
+                          >
+                            <OutlineHeart
+                              fav={isObjectInFav(object.id).toString()}
+                            />
+                          </TestButton>
                         )}
                         <div
                           onClick={(event) =>
                             handleClick(event, object.objectNumber)
                           }
                         >
-                          <Title>{object.title}</Title>
+                          <Title fav={isObjectInFav(object.id).toString()}>
+                            {object.title}
+                          </Title>
                           <Maker>{object.principalOrFirstMaker}</Maker>
                         </div>
                       </ArtContainer>
@@ -242,8 +273,8 @@ const Maker = styled.p`
 
 const OutlineHeart = styled(FiHeart)`
   font-size: 20px;
-  margin-top: -30px;
-  margin-left: 350px;
+  fill: ${(props) => (props.fav === "true" ? "red" : "none")};
+  color: ${(props) => (props.fav === "true" ? "red" : "#F8F0DE")};
   :hover {
     color: red;
     fill: red;
@@ -278,5 +309,17 @@ const Sorry = styled.p`
   font-size: 20px;
   margin-top: 20px;
   font-family: var(--font-headers);
+`;
+
+const TestButton = styled.button`
+  padding: 0;
+  background-color: transparent;
+  width: 22px;
+  height: 22px;
+  margin-top: -30px;
+  margin-left: 350px;
+  :disabled {
+    cursor: not-allowed;
+  }
 `;
 export default Collection;

@@ -3,9 +3,9 @@ import Loading from "./Loading";
 import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
 
-const CommentSection = () => {
+const CommentSection = ({ isEditMode }) => {
   const [comments, setComments] = useState();
-  const { isAuthenticated, user, isLoading } = useAuth0();
+  const { user, isLoading } = useAuth0();
   const [text, setText] = useState("");
   const [posted, setPosted] = useState(false);
   useEffect(() => {
@@ -75,9 +75,11 @@ const CommentSection = () => {
                     <UserName>{info.user}</UserName>
                     <Comment>{info.comment}</Comment>
                   </TextDiv>
-                  <DeleteButton onClick={() => handleDelete(info._id)}>
-                    x
-                  </DeleteButton>
+                  {isEditMode && (
+                    <DeleteButton onClick={() => handleDelete(info._id)}>
+                      x
+                    </DeleteButton>
+                  )}
                 </CommentsDiv>
               );
             })}

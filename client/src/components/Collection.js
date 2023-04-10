@@ -5,13 +5,13 @@ import Loading from "./Loading";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FiHeart } from "react-icons/fi";
 
-const Collection = ({ favorite, setFavorite }) => {
+const Collection = ({ favorite, liked, setLiked }) => {
   const { isAuthenticated, user } = useAuth0();
   const [collection, setCollection] = useState();
   const [searchValue, setSearchValue] = useState("");
   const [radioButtonSelect, setRadioButtonSelect] = useState("");
   const [page, setPage] = useState(1);
-  const [liked, setLiked] = useState(false);
+ 
   const [buttonClicked, setButtonClicked] = useState({});
 
   useEffect(() => {
@@ -58,19 +58,6 @@ const Collection = ({ favorite, setFavorite }) => {
         console.log(error);
       });
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetch(`/mycollection/${user.sub}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFavorite(data.data[0].favorite);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [setFavorite, isAuthenticated, user, liked]);
 
   const handlePreviousPage = () => {
     if (page > 1) {

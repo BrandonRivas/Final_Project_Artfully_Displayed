@@ -6,14 +6,19 @@ import Loading from "./Loading";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 
-const MyCollection = ({ favorite, setFavorite }) => {
+const MyCollection = ({
+  favorite,
+  setFavorite,
+  posted,
+  setPosted,
+  rerender,
+  setRerender,
+}) => {
   const { isLoading, isAuthenticated, user } = useAuth0();
-  const [posted, setPosted] = useState(false);
+
   const [showButton, setShowButton] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [rerender, setRerender] = useState(false);
- 
 
   const createCollection = () => {
     fetch("/collection", {
@@ -37,18 +42,18 @@ const MyCollection = ({ favorite, setFavorite }) => {
       });
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetch(`/mycollection/${user.sub}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFavorite(data.data[0].favorite);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [user, posted, rerender, setFavorite]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     fetch(`/mycollection/${user.sub}`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setFavorite(data.data[0].favorite);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   }
+  // }, [user, posted, rerender, setFavorite]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

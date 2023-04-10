@@ -8,23 +8,23 @@ This is a full-stack project that uses the Rijksmuseum’s API to fetch their co
 
 ## Project Setup
 
-### The Frontend
-
-1. Open a terminal in VS Code
-2. Type `cd client`
-3. Type `yarn install`
-
-Use `yarn start` to start the frontend dev environment.
-
 ### The Backend
 
-1. Open _another_ terminal in VS Code
+1. Open a terminal in VS Code
 2. Type `cd server`
 3. Type `yarn install`
 
 Use `yarn start` to start the backend dev environment.
 
---- 
+### The Frontend
+
+1. Open _another_ terminal in VS Code
+2. Type `cd client`
+3. Type `yarn install`
+
+Use `yarn start` to start the frontend dev environment.
+
+---
 
 ### Apis Used
 
@@ -32,6 +32,6 @@ Use `yarn start` to start the backend dev environment.
 - [Auth0](https://auth0.com/)
 - [DiceBear](https://www.dicebear.com/how-to-use/http-api)
 
-### Backend Server 
+### Backend Server
 
-The server is running on MongoDB using RESTful practices and features `GET`, `PATCH`, `POST`, and `DELETE` methods. 
+The server is running on MongoDB using RESTful practices and features `GET`, `PATCH`, `POST`, and `DELETE` methods.

@@ -14,7 +14,6 @@ const Collection = ({ favorite, setFavorite }) => {
   const [liked, setLiked] = useState(false);
   const [buttonClicked, setButtonClicked] = useState({});
 
-
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
     if (searchValue) {
@@ -134,11 +133,7 @@ const Collection = ({ favorite, setFavorite }) => {
                   {collection.map((object) => {
                     return (
                       <ArtContainer key={object.id}>
-                        <div
-                          onClick={(event) =>
-                            handleClick(event, object.objectNumber)
-                          }
-                        >
+                        <div onClick={() => handleClick(object.objectNumber)}>
                           {object.webImage === null ? (
                             <Img src="/sorry.png" />
                           ) : (
@@ -147,7 +142,10 @@ const Collection = ({ favorite, setFavorite }) => {
                         </div>
                         {isAuthenticated && object.webImage && (
                           <TestButton
-                            disabled={buttonClicked[object.id] ||isObjectInFav(object.id)}
+                            disabled={
+                              buttonClicked[object.id] ||
+                              isObjectInFav(object.id)
+                            }
                             onClick={() => handleLike(object)}
                           >
                             <OutlineHeart

@@ -22,8 +22,6 @@ const SingleObject = () => {
       });
   }, [id]);
 
-  console.log(object);
-
   const handleEnlargeClick = () => {
     setEnlarged(!enlarged);
   };
@@ -72,7 +70,7 @@ const SingleObject = () => {
             <H2>{object.title}</H2>
             <MakerP>{object.scLabelLine}</MakerP>
             <DescriptionP>{object.label.description}</DescriptionP>{" "}
-            <TableDiv display={display}>
+            <TableDiv display={display.toString()}>
               <p>Number</p>
               <p>
                 {object.objectNumber
@@ -194,7 +192,7 @@ const TableDiv = styled.div`
   grid-column-gap: 15px;
   grid-row-gap: 15px;
   overflow: hidden;
-  max-height: ${(props) => (props.display ? "1000px" : "0")};
+  max-height: ${(props) => (props.display === "true" ? "1000px" : "0")};
   transition: max-height 0.5s ease-in-out;
   margin-top: 40px;
   margin-bottom: 50px;

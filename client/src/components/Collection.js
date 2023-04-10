@@ -12,6 +12,8 @@ const Collection = ({ favorite, setFavorite }) => {
   const [radioButtonSelect, setRadioButtonSelect] = useState("");
   const [page, setPage] = useState(1);
   const [liked, setLiked] = useState(false);
+  const [buttonClicked, setButtonClicked] = useState({});
+
 
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
@@ -35,6 +37,10 @@ const Collection = ({ favorite, setFavorite }) => {
   }, [page, searchValue, radioButtonSelect]);
 
   const handleLike = (object) => {
+    setButtonClicked((prevState) => ({
+      ...prevState,
+      [object.id]: true,
+    }));
     fetch(`/mycollection/${user.sub}`, {
       method: "PATCH",
       headers: {
@@ -85,7 +91,7 @@ const Collection = ({ favorite, setFavorite }) => {
     });
   };
 
-  const handleClick = (event, objectId) => {
+  const handleClick = (objectId) => {
     window.open(`/collection/${objectId}`);
   };
 
@@ -141,7 +147,7 @@ const Collection = ({ favorite, setFavorite }) => {
                         </div>
                         {isAuthenticated && object.webImage && (
                           <TestButton
-                            disabled={isObjectInFav(object.id)}
+                            disabled={buttonClicked[object.id] ||isObjectInFav(object.id)}
                             onClick={() => handleLike(object)}
                           >
                             <OutlineHeart
@@ -154,9 +160,7 @@ const Collection = ({ favorite, setFavorite }) => {
                             handleClick(event, object.objectNumber)
                           }
                         >
-                          <Title fav={isObjectInFav(object.id).toString()}>
-                            {object.title}
-                          </Title>
+                          <Title>{object.title}</Title>
                           <Maker>{object.principalOrFirstMaker}</Maker>
                         </div>
                       </ArtContainer>

@@ -80,6 +80,9 @@ const MyCollection = ({ favorite, setFavorite }) => {
       });
   };
 
+  const handleClick = (objectId) => {
+    window.open(`/collection/${objectId}`);
+  };
   if (error) {
     return <ErrorDiv>{error}</ErrorDiv>;
   }
@@ -147,13 +150,16 @@ const MyCollection = ({ favorite, setFavorite }) => {
                                   onClick={() => handleDelete(object.id)}
                                 />
                               )}
-
-                              <Img src={object.webImage.url} />
-                              <TextDiv>
-                                <Title>{object.longTitle}</Title>
-                                <p>{object.principalOrFirstMaker}</p>
-                                <p>Object number: {object.objectNumber}</p>
-                              </TextDiv>
+                              <div
+                                onClick={() => handleClick(object.objectNumber)}
+                              >
+                                <Img src={object.webImage.url} />
+                                <TextDiv>
+                                  <Title>{object.longTitle}</Title>
+                                  <p>{object.principalOrFirstMaker}</p>
+                                  <p>Object number: {object.objectNumber}</p>
+                                </TextDiv>
+                              </div>
                             </IndividualDiv>
                           );
                         })}

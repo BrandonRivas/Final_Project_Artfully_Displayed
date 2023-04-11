@@ -13,7 +13,7 @@ const MyCollection = ({ favorite, setFavorite }) => {
   const [hidden, setHidden] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [rerender, setRerender] = useState(false);
- 
+  const [error, setError] = useState(null);
 
   const createCollection = () => {
     fetch("/collection", {
@@ -29,11 +29,13 @@ const MyCollection = ({ favorite, setFavorite }) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setPosted(!posted);
+        setError(null);
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to create collection.");
       });
   };
 
@@ -43,9 +45,11 @@ const MyCollection = ({ favorite, setFavorite }) => {
         .then((response) => response.json())
         .then((data) => {
           setFavorite(data.data[0].favorite);
+          setError(null);
         })
         .catch((error) => {
           console.log(error);
+          setError("Failed to fetch favorites.");
         });
     }
   }, [user, posted, rerender, setFavorite]);
@@ -76,9 +80,11 @@ const MyCollection = ({ favorite, setFavorite }) => {
       .then((res) => res.json())
       .then((data) => {
         setRerender(!rerender);
+        setError(null);
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to delete.");
       });
   };
   const deleteAll = () => {
@@ -92,11 +98,16 @@ const MyCollection = ({ favorite, setFavorite }) => {
       .then((res) => res.json())
       .then((data) => {
         setFavorite([]);
+        setError(null);
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to delete all.");
       });
   };
+  if (error) {
+    return <ErrorDiv>{error}</ErrorDiv>;
+  }
   return (
     <Wrapper>
       <TitleDiv>
@@ -303,5 +314,13 @@ const Title = styled.p`
   font-family: var(--font-headers);
   margin-bottom: 5px;
   margin-top: 2px;
+`;
+
+const ErrorDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  font-size: 25px;
 `;
 export default MyCollection;

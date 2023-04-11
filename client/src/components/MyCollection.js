@@ -9,13 +9,20 @@ import EditMenu from "./EditMenu";
 
 const MyCollection = ({ favorite, setFavorite }) => {
   const { isLoading, isAuthenticated, user } = useAuth0();
+  //this toggles a state to re-render if a user creates a collection for the first time
   const [posted, setPosted] = useState(false);
+  //if the user has never created a collection this will toggle state to show a button to do so.
   const [showButton, setShowButton] = useState(false);
+  //this toggles the state to display the edit features
   const [isEditMode, setIsEditMode] = useState(false);
+  //this toggles a rerender after a delete and intro update,
   const [rerender, setRerender] = useState(false);
+  //if an error is caught this will display an error message
   const [error, setError] = useState(null);
+  //this is to set the intro to/from the database
   const [intro, setIntro] = useState();
 
+  // once the user is authenticated through auth0 it will fetch and set the favorite collection and intro to state
   useEffect(() => {
     if (isAuthenticated) {
       fetch(`/mycollection/${user.sub}`)
@@ -30,6 +37,8 @@ const MyCollection = ({ favorite, setFavorite }) => {
     }
   }, [user, posted, rerender, setFavorite]);
 
+  // this function is to create a collection based on the user's id to mongodb. It includes an
+  //empty favorite array and a basic intro
   const createCollection = () => {
     fetch("/collection", {
       method: "POST",
@@ -54,6 +63,8 @@ const MyCollection = ({ favorite, setFavorite }) => {
       });
   };
 
+  //this is to delay the button to create a user collection in the instance that
+  //fetching the collection takes too long
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
@@ -61,6 +72,8 @@ const MyCollection = ({ favorite, setFavorite }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  //this is to delete an object based on it's id and to only be deleted from the collection
+  //associated to the specific user
   const handleDelete = (objectId) => {
     fetch(`/mycollection/${user.sub}/${objectId}`, {
       method: "DELETE",
@@ -80,9 +93,12 @@ const MyCollection = ({ favorite, setFavorite }) => {
       });
   };
 
+  //on click of the image or text of the object, it will open a new window to the single object page
   const handleClick = (objectId) => {
     window.open(`/collection/${objectId}`);
   };
+
+  // if any errors are caught, it will be displayed in this div
   if (error) {
     return <ErrorDiv>{error}</ErrorDiv>;
   }

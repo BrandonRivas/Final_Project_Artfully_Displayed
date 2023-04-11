@@ -9,6 +9,7 @@ const options = {
   useUnifiedTopology: true,
 };
 
+//this will export the data found in data/comments.json to mongoDB. 
 const batchImport = async () => {
   const client = new MongoClient(MONGO_URI, options);
   try {

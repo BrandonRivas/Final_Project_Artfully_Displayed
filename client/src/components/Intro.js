@@ -9,8 +9,11 @@ const Intro = ({
   setRerender,
   setError,
 }) => {
+  //this is to track the new value of the introduction text
   const [text, setText] = useState("");
 
+  //this is the function that will patch the new value of the text input to the mongodb, it will also
+  //trigger a re-render
   const handleSumbit = () => {
     fetch(`/intro/${user.sub}`, {
       method: "PATCH",
@@ -31,6 +34,7 @@ const Intro = ({
         setError("Failed to update intro.");
       });
   };
+  //this function tracks the changes in the text area and sets it to the text useState
   const handleChange = (event) => {
     setText(event.target.value);
   };
@@ -40,22 +44,24 @@ const Intro = ({
         <IntroP>{intro}</IntroP>
         {isEditMode && (
           <>
-            <TextArea
-              type="text"
-              rows="6"
-              cols="135"
-              value={text}
-              placeholder={intro}
-              onChange={handleChange}
-            />
-            <Submit
-              onClick={(event) => {
-                event.preventDefault();
-                handleSumbit();
-              }}
-            >
-              submit
-            </Submit>
+            <TextDiv>
+              <TextArea
+                type="text"
+                rows="6"
+                cols="100"
+                value={text}
+                placeholder={intro}
+                onChange={handleChange}
+              />
+              <Submit
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleSumbit();
+                }}
+              >
+                submit
+              </Submit>
+            </TextDiv>
           </>
         )}
       </IntroDiv>
@@ -83,12 +89,20 @@ const TextArea = styled.textarea`
   background-color: var(--color-old-lace);
   border-radius: 5px;
   margin-top: 10px;
+  padding: 10px;
 `;
 
 const Submit = styled.button`
   padding: 10px 20px;
+  margin-top: 10px;
   :hover {
     opacity: 50%;
   }
+`;
+
+const TextDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 export default Intro;

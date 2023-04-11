@@ -6,14 +6,25 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { FiHeart } from "react-icons/fi";
 
 const Collection = ({ favorite, setFavorite }) => {
+  //states from auth0 about the user
   const { isAuthenticated, user } = useAuth0();
+  //this will contain the collection after being fetched from the museum
   const [collection, setCollection] = useState();
+  //this contains the search value from the text input to be used as a query
   const [searchValue, setSearchValue] = useState("");
+  //this contains the radio button value for the query in the search
   const [radioButtonSelect, setRadioButtonSelect] = useState("");
+  //this is the state that contains the current page
   const [page, setPage] = useState(1);
+  //this setState is for toggling if an object is liked to re-fetch
   const [liked, setLiked] = useState(false);
+  //this track the state of clicked hearts
   const [buttonClicked, setButtonClicked] = useState({});
+  //this is the state that will be set for any errors
   const [error, setError] = useState(null);
+
+  //this is the fetch that will retrieve the data from the museum. If there is a search value, a radio button value,
+  //or both it will be directed to the correct endpoint and provide the according query values
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
     if (searchValue) {
@@ -37,6 +48,8 @@ const Collection = ({ favorite, setFavorite }) => {
       });
   }, [page, searchValue, radioButtonSelect]);
 
+  //this will primarily add favorites to the favorite key objects in mongodb
+  //it will also disable the heart after it's been clicked
   const handleLike = (object) => {
     setButtonClicked((prevState) => ({
       ...prevState,
@@ -63,6 +76,8 @@ const Collection = ({ favorite, setFavorite }) => {
       });
   };
 
+  //this fetches the favorite collection and sets it to a state. This is so that we can update the favorite collection
+  //after each like, and allows the hearts to change color if they've been liked.
   useEffect(() => {
     if (isAuthenticated) {
       fetch(`/mycollection/${user.sub}`)
@@ -76,6 +91,8 @@ const Collection = ({ favorite, setFavorite }) => {
     }
   }, [setFavorite, isAuthenticated, user, liked]);
 
+  //this will change the the state of page -1 to allow us to navigate to the previous page,
+  // and will also scroll up to the top when clicked
   const handlePreviousPage = () => {
     if (page > 1) {
       setPage((prevPage) => prevPage - 1);
@@ -85,7 +102,8 @@ const Collection = ({ favorite, setFavorite }) => {
       });
     }
   };
-
+  //this will change the the state of page +1 to allow us to navigate to the next page,
+  // and will also scroll up to the top when clicked
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
     window.scrollTo({
@@ -94,10 +112,14 @@ const Collection = ({ favorite, setFavorite }) => {
     });
   };
 
+//if you click on an image or on it's text the user will be brought the the single object
+//page according to it's id
   const handleClick = (objectId) => {
     window.open(`/collection/${objectId}`);
   };
 
+//this function checks to see if it is already in the favorite collection. If it is, it returns true
+//and will turn red, if it isn't, it returns false. 
   const isObjectInFav = (objectId) => {
     if (favorite) {
       const foundItem = favorite.find((item) => item.id === objectId);
@@ -108,6 +130,8 @@ const Collection = ({ favorite, setFavorite }) => {
     }
     return false;
   };
+
+  //if an error is caught it will be displayed in this div
   if (error) {
     return <ErrorDiv>{error}</ErrorDiv>;
   }

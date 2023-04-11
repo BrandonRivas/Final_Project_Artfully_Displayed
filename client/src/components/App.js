@@ -9,6 +9,8 @@ import { useState } from "react";
 
 
 const App = () => {
+  //this is the hoisted favorite state so that it can be used in the collection and 
+  //my collection components 
   const [favorite, setFavorite] = useState();
 
   return (

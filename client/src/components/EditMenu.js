@@ -9,7 +9,11 @@ const EditMenu = ({
   setIsEditMode,
   isEditMode,
 }) => {
+  //this state is to toggle if the menu is hidden or not
   const [hidden, setHidden] = useState(false);
+
+  //this function will delete all the objects in the favorite key of the specific user. it will also 
+  //set the states of favorite and error to it's initial states
   const deleteAll = () => {
     fetch(`/mycollection/${user.sub}`, {
       method: "DELETE",
@@ -29,10 +33,14 @@ const EditMenu = ({
       });
   };
 
+
+//this is the function that will toggle the state to display the garbage cans in MyCollection
   const handleEditClick = () => {
     setIsEditMode(!isEditMode);
   };
 
+// this function will show menu after clicking the hamburger icon. if you click it again
+//it will also hide the edit features
   const showMenu = () => {
     setHidden(!hidden);
     setIsEditMode(false);

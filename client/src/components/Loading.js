@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
+//this is just the loading component from https://loading.io/css/
 const Loading = () => {
   return (
     <div>

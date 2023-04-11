@@ -13,7 +13,7 @@ const Collection = ({ favorite, setFavorite }) => {
   const [page, setPage] = useState(1);
   const [liked, setLiked] = useState(false);
   const [buttonClicked, setButtonClicked] = useState({});
-
+  const [error, setError] = useState(null);
   useEffect(() => {
     let endpoint = `/collection?p=${page}`;
     if (searchValue) {
@@ -29,9 +29,11 @@ const Collection = ({ favorite, setFavorite }) => {
       .then((response) => response.json())
       .then((data) => {
         setCollection(data.data.artObjects);
+        setError(null);
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to fetch collection data.");
       });
   }, [page, searchValue, radioButtonSelect]);
 
@@ -51,11 +53,13 @@ const Collection = ({ favorite, setFavorite }) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setLiked(!liked);
+        setError(null);
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to add to favorites.");
       });
   };
 
@@ -65,9 +69,11 @@ const Collection = ({ favorite, setFavorite }) => {
         .then((response) => response.json())
         .then((data) => {
           setFavorite(data.data[0].favorite);
+          setError(null);
         })
         .catch((error) => {
           console.log(error);
+          setError("Failed to fetch favorites.");
         });
     }
   }, [setFavorite, isAuthenticated, user, liked]);
@@ -105,6 +111,9 @@ const Collection = ({ favorite, setFavorite }) => {
     return false;
   };
 
+  if (error) {
+    return <ErrorDiv>{error}</ErrorDiv>;
+  }
   return (
     <>
       <Div>
@@ -323,5 +332,13 @@ const TestButton = styled.button`
   :disabled {
     cursor: not-allowed;
   }
+`;
+
+const ErrorDiv = styled.div`
+  display: flex;
+  position: absolute;
+  margin-top: 150px;
+  margin-left: 40vw;
+  font-size: 25px;
 `;
 export default Collection;

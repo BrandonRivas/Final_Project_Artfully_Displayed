@@ -8,7 +8,7 @@
 | `/mycollection/:id`           | `GET`    | Returns the favorite collection for the specific user.                              |
 | --------                      | ------   | ----------------------                                                              |
 | `/mycollection/:id`           | `PATCH`  | This adds a liked object to the collection for the specific user.                   |
-| `/mycollection/:id`           | `PATCH`  | This updates the introduction section.                                              |
+| `/intro/:id`                  | `PATCH`  | This updates the introduction section.                                              |
 | --------                      | ------   | ----------------------                                                              |
 | `/comments`                   | `POST`   | This will post a comment to the comment collection.                                 |
 | `/collection`                 | `POST`   | This will create a favorite collection for the specific user if one does not exist. |

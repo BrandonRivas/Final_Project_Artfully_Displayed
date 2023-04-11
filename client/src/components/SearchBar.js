@@ -32,7 +32,7 @@ const SearchBar = ({ setSearchValue, setRadioButtonSelect, setPage }) => {
 
   return (
     <>
-      <Warapper>
+      <Wrapper>
         <SearchBarDiv>
           <SearchDiv>
             <SearchLoop />
@@ -131,11 +131,11 @@ const SearchBar = ({ setSearchValue, setRadioButtonSelect, setPage }) => {
             <label htmlFor="stoneware">Stoneware</label>
           </RadioDiv>
         </FilterDiv>
-      </Warapper>
+      </Wrapper>
     </>
   );
 };
-const Warapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

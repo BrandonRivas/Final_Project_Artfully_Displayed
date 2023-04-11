@@ -30,7 +30,7 @@ const CommentSection = ({ isEditMode }) => {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setText("");
         setPosted(!posted);
       })

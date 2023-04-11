@@ -5,6 +5,7 @@ import CommentSection from "./CommentSection";
 import Loading from "./Loading";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
+import Intro from "./Intro";
 
 const MyCollection = ({ favorite, setFavorite }) => {
   const { isLoading, isAuthenticated, user } = useAuth0();
@@ -15,7 +16,6 @@ const MyCollection = ({ favorite, setFavorite }) => {
   const [rerender, setRerender] = useState(false);
   const [error, setError] = useState(null);
   const [intro, setIntro] = useState();
-  const [text, setText] = useState("");
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -62,10 +62,6 @@ const MyCollection = ({ favorite, setFavorite }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleChange = (event) => {
-    setText(event.target.value);
-  };
-
   const showMenu = () => {
     setHidden(!hidden);
     setIsEditMode(false);
@@ -74,26 +70,7 @@ const MyCollection = ({ favorite, setFavorite }) => {
   const handleEditClick = () => {
     setIsEditMode(!isEditMode);
   };
-  const handleSumbit = () => {
-    fetch(`/intro/${user.sub}`, {
-      method: "PATCH",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        intro: text,
-      }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setRerender(!rerender);
-      })
-      .catch((error) => {
-        console.log(error);
-        setError("Failed to update intro.");
-      });
-  };
+
   const handleDelete = (objectId) => {
     fetch(`/mycollection/${user.sub}/${objectId}`, {
       method: "DELETE",
@@ -184,29 +161,14 @@ const MyCollection = ({ favorite, setFavorite }) => {
                       <MenuDiv>
                         <Menu onClick={showMenu} />
                       </MenuDiv>
-                      <IntroDiv>
-                        <IntroP>{intro}</IntroP>
-                        {isEditMode && (
-                          <>
-                            <TextArea
-                              type="text"
-                              rows="6"
-                              cols="135"
-                              value={text}
-                              placeholder={intro}
-                              onChange={handleChange}
-                            />
-                            <Submit
-                              onClick={(event) => {
-                                event.preventDefault();
-                                handleSumbit();
-                              }}
-                            >
-                              submit
-                            </Submit>
-                          </>
-                        )}
-                      </IntroDiv>
+                      <Intro
+                        intro={intro}
+                        isEditMode={isEditMode}
+                        user={user}
+                        rerender={rerender}
+                        setRerender={setRerender}
+                        setError={setError}
+                      />
                       <CollectionDiv>
                         {favorite.map((object) => {
                           return (
@@ -384,32 +346,4 @@ const ErrorDiv = styled.div`
   font-size: 25px;
 `;
 
-const IntroDiv = styled.div`
-  width: 50%;
-  margin-top: 20px;
-  margin-bottom: 5px;
-  font-size: 20px;
-`;
-
-const IntroP = styled.p`
-  text-align: center;
-  opacity: 75%;
-`;
-
-const TextArea = styled.textarea`
-  border: none;
-  outline: none;
-  font-family: var(--font-all);
-  color: var(--color-raisin-black);
-  background-color: var(--color-old-lace);
-  border-radius: 5px;
-  margin-top: 10px;
-`;
-
-const Submit = styled.button`
-  padding: 10px 20px;
-  :hover {
-    opacity: 50%;
-  }
-`;
 export default MyCollection;

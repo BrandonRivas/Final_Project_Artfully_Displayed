@@ -14,6 +14,22 @@ const MyCollection = ({ favorite, setFavorite }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [rerender, setRerender] = useState(false);
   const [error, setError] = useState(null);
+  const [intro, setIntro] = useState();
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch(`/mycollection/${user.sub}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFavorite(data.data[0].favorite);
+          setIntro(data.data[0].intro);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [user, posted, rerender, setFavorite]);
 
   const createCollection = () => {
     fetch("/collection", {
@@ -25,7 +41,7 @@ const MyCollection = ({ favorite, setFavorite }) => {
       body: JSON.stringify({
         _id: user.sub,
         favorite: [],
-        collection: true,
+        intro: "Insert an intro about your virtual exhibition",
       }),
     })
       .then((res) => res.json())
@@ -40,26 +56,15 @@ const MyCollection = ({ favorite, setFavorite }) => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetch(`/mycollection/${user.sub}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFavorite(data.data[0].favorite);
-          setError(null);
-        })
-        .catch((error) => {
-          console.log(error);
-          setError("Failed to fetch favorites.");
-        });
-    }
-  }, [user, posted, rerender, setFavorite]);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       setShowButton(true);
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
 
   const showMenu = () => {
     setHidden(!hidden);
@@ -68,6 +73,26 @@ const MyCollection = ({ favorite, setFavorite }) => {
 
   const handleEditClick = () => {
     setIsEditMode(!isEditMode);
+  };
+  const handleSumbit = () => {
+    fetch(`/intro/${user.sub}`, {
+      method: "PATCH",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        intro: text,
+      }),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setRerender(!rerender);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError("Failed to update intro.");
+      });
   };
   const handleDelete = (objectId) => {
     fetch(`/mycollection/${user.sub}/${objectId}`, {
@@ -78,7 +103,7 @@ const MyCollection = ({ favorite, setFavorite }) => {
       },
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setRerender(!rerender);
         setError(null);
       })
@@ -87,6 +112,7 @@ const MyCollection = ({ favorite, setFavorite }) => {
         setError("Failed to delete.");
       });
   };
+
   const deleteAll = () => {
     fetch(`/mycollection/${user.sub}`, {
       method: "DELETE",
@@ -96,7 +122,7 @@ const MyCollection = ({ favorite, setFavorite }) => {
       },
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setFavorite([]);
         setError(null);
       })
@@ -105,9 +131,11 @@ const MyCollection = ({ favorite, setFavorite }) => {
         setError("Failed to delete all.");
       });
   };
+
   if (error) {
     return <ErrorDiv>{error}</ErrorDiv>;
   }
+
   return (
     <Wrapper>
       <TitleDiv>
@@ -156,6 +184,29 @@ const MyCollection = ({ favorite, setFavorite }) => {
                       <MenuDiv>
                         <Menu onClick={showMenu} />
                       </MenuDiv>
+                      <IntroDiv>
+                        <IntroP>{intro}</IntroP>
+                        {isEditMode && (
+                          <>
+                            <TextArea
+                              type="text"
+                              rows="6"
+                              cols="135"
+                              value={text}
+                              placeholder={intro}
+                              onChange={handleChange}
+                            />
+                            <Submit
+                              onClick={(event) => {
+                                event.preventDefault();
+                                handleSumbit();
+                              }}
+                            >
+                              submit
+                            </Submit>
+                          </>
+                        )}
+                      </IntroDiv>
                       <CollectionDiv>
                         {favorite.map((object) => {
                           return (
@@ -282,6 +333,9 @@ const Garbage = styled(MdOutlineDeleteOutline)`
   background-color: rgba(41, 115, 115, 0.8);
   padding: 2px;
   border-radius: 5px;
+  :hover {
+    opacity: 50%;
+  }
 `;
 
 const MenuDiv = styled.div`
@@ -304,10 +358,16 @@ const ButtonDiv = styled.div`
 `;
 const Edit = styled.button`
   padding: 10px 20px;
+  :hover {
+    opacity: 50%;
+  }
 `;
 const DeleteAllButton = styled.button`
   padding: 10px 20px;
   margin-left: 10px;
+  :hover {
+    opacity: 50%;
+  }
 `;
 
 const Title = styled.p`
@@ -322,5 +382,34 @@ const ErrorDiv = styled.div`
   align-items: center;
   padding: 15px;
   font-size: 25px;
+`;
+
+const IntroDiv = styled.div`
+  width: 50%;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 20px;
+`;
+
+const IntroP = styled.p`
+  text-align: center;
+  opacity: 75%;
+`;
+
+const TextArea = styled.textarea`
+  border: none;
+  outline: none;
+  font-family: var(--font-all);
+  color: var(--color-raisin-black);
+  background-color: var(--color-old-lace);
+  border-radius: 5px;
+  margin-top: 10px;
+`;
+
+const Submit = styled.button`
+  padding: 10px 20px;
+  :hover {
+    opacity: 50%;
+  }
 `;
 export default MyCollection;

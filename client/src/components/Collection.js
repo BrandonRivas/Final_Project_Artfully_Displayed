@@ -69,11 +69,9 @@ const Collection = ({ favorite, setFavorite }) => {
         .then((response) => response.json())
         .then((data) => {
           setFavorite(data.data[0].favorite);
-          setError(null);
         })
         .catch((error) => {
           console.log(error);
-          setError("Failed to fetch favorites.");
         });
     }
   }, [setFavorite, isAuthenticated, user, liked]);
@@ -110,10 +108,10 @@ const Collection = ({ favorite, setFavorite }) => {
     }
     return false;
   };
-
   if (error) {
     return <ErrorDiv>{error}</ErrorDiv>;
   }
+
   return (
     <>
       <Div>

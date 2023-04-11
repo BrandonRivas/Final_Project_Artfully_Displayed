@@ -9,7 +9,7 @@ import { useState } from "react";
 
 
 const App = () => {
-  const [favorite, setFavorite] = useState([]);
+  const [favorite, setFavorite] = useState();
 
   return (
     <BrowserRouter>

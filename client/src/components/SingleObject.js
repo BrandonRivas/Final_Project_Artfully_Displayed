@@ -8,9 +8,12 @@ const SingleObject = () => {
   const { id } = useParams();
   const [object, setObject] = useState();
   const [enlarged, setEnlarged] = useState(false);
+  // this is to change the opacity of the i icon on hover
   const [hidden, setHidden] = useState(false);
+  //this is to display the table of more information
   const [display, setDisplay] = useState(false);
 
+  //this is to fetch the information of a single object based on it's object id
   useEffect(() => {
     fetch(`/collection/${id}`)
       .then((response) => response.json())
@@ -22,10 +25,13 @@ const SingleObject = () => {
       });
   }, [id]);
 
+  // the function to increase the size of the photo for better viewing
   const handleEnlargeClick = () => {
     setEnlarged(!enlarged);
   };
 
+  // this function allows for the user to see more details about the object.
+  //the function also have a scroll to the bottom of the page feature after it's been clicked.
   const handleClick = () => {
     setDisplay(!display);
     setTimeout(() => {
@@ -57,6 +63,7 @@ const SingleObject = () => {
             <Button onClick={handleEnlargeClick}>
               {enlarged ? "Shrink" : "Enlarge"}
             </Button>
+            {/*this is just so that the opacity of the icon changes on hover */}
             <Info
               onMouseEnter={() => setHidden(true)}
               onMouseLeave={() => setHidden(false)}

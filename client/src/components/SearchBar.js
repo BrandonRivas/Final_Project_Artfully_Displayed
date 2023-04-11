@@ -2,34 +2,44 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { BiSearchAlt } from "react-icons/bi";
 import { MdClear } from "react-icons/md";
+
 const SearchBar = ({ setSearchValue, setRadioButtonSelect, setPage }) => {
+  //the state to display the radio buttons
   const [isClicked, setIsClicked] = useState(false);
+  //the state to set the value of the search input
   const [value, setValue] = useState("");
+  //the state to set the value of the selected radio button
   const [selectedFilter, setSelectedFilter] = useState("");
 
+  //this is to set the value of the search bar to value of the input
+  const searchHandler = (value) => {
+    setValue(value);
+  };
+
+  //this is to show the radio buttons
   const advancedClick = () => {
     setIsClicked(!isClicked);
   };
 
+  // this is to set the value of the selected filter
+  const handleFilterChange = (event) => {
+    setSelectedFilter(event.target.value);
+  };
+
+  //the function that will search the museum's database base on the search value and a selected filter. It also sets the
+  //starting page to 1
   const handleClick = () => {
     setSearchValue(value);
     setRadioButtonSelect(selectedFilter);
     setPage(1);
   };
-  const searchHandler = (value) => {
-    setValue(value);
-  };
 
+  // this is to re-set the states of the filter, input value, and page to default
   const clearClick = () => {
     setValue("");
     setSelectedFilter("");
     setPage(1);
   };
-
-  const handleFilterChange = (event) => {
-    setSelectedFilter(event.target.value);
-  };
-
   return (
     <>
       <Wrapper>

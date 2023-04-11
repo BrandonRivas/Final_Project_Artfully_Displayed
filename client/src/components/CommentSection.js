@@ -4,10 +4,16 @@ import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const CommentSection = ({ isEditMode }) => {
+  //this state will contain the fetched comments from the db
   const [comments, setComments] = useState();
+  //this are the states from auth0
   const { user, isLoading } = useAuth0();
+  //this state tracks the value of the input area
   const [text, setText] = useState("");
+  //this is to re-render the comment section after posting
   const [posted, setPosted] = useState(false);
+
+  //this will fetch and set the comments from the dp
   useEffect(() => {
     fetch("/comments")
       .then((response) => response.json())
@@ -16,6 +22,7 @@ const CommentSection = ({ isEditMode }) => {
       });
   }, [setComments, posted]);
 
+  //when the user clicks the post button it will post it to the db and re-set the default values of the states
   const handleClick = () => {
     fetch("/comments", {
       method: "POST",
@@ -38,10 +45,13 @@ const CommentSection = ({ isEditMode }) => {
         console.log(error);
       });
   };
+
+  //this is to set the text value from the text area input
   const handleChange = (event) => {
     setText(event.target.value);
   };
 
+  //this will delete a comment from the db based on it's id
   const handleDelete = (id) => {
     fetch(`/comments/${id}`, {
       method: "DELETE",
@@ -50,7 +60,7 @@ const CommentSection = ({ isEditMode }) => {
         "Content-Type": "application/json",
       },
     })
-      .then((data) => {
+      .then(() => {
         setPosted(!posted);
       })
       .catch((error) => {

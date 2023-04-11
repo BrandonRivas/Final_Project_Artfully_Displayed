@@ -1,5 +1,5 @@
 "use strict";
-const { response } = require("express");
+
 const { MongoClient } = require("mongodb");
 
 require("dotenv").config({ path: "../.env" });
@@ -13,6 +13,10 @@ const options = {
   useUnifiedTopology: true,
 };
 
+// this will fetch the collection of objects from the museum. Based on what's provided, it will fetch different endpoints. 
+// the default is to fetch 20 objects at a time. If a query is provided it will search for that query in any of the keys 
+// provided by the museum. If the user uses a radio button it will add the type query. It will also fetch based on if 
+// a query and type is provided. 
 const getCollection = async (request, response) => {
   try {
     const { p, q, type } = request.query;
@@ -37,6 +41,7 @@ const getCollection = async (request, response) => {
   }
 };
 
+//based on an object's id it will fetch the result from the museum's api
 const getSingleObject = async (request, response) => {
   const objectId = request.params.id;
   try {
@@ -51,6 +56,8 @@ const getSingleObject = async (request, response) => {
     response.status(500).json({ message: error.message });
   }
 };
+
+//this will fetch the comments collection from MongoDB 
 const getComments = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -75,6 +82,7 @@ const getComments = async (request, response) => {
   }
 };
 
+//This will insert a comment into the comment collection
 const postComments = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -97,6 +105,7 @@ const postComments = async (request, response) => {
   }
 };
 
+// if the user is new and does not have a collection based on it's id, this will create one
 const createCollection = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -126,6 +135,7 @@ const createCollection = async (request, response) => {
   }
 };
 
+//this will fetch the collection for the user based on the provided id
 const getMyCollection = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -156,6 +166,7 @@ const getMyCollection = async (request, response) => {
   }
 };
 
+//once a user likes an object it will be added to the favorite key
 const addToCollection = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -186,6 +197,7 @@ const addToCollection = async (request, response) => {
   }
 };
 
+// This will update the intro key with the provided values from a textarea 
 const updateIntro = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -215,6 +227,8 @@ const updateIntro = async (request, response) => {
     client.close();
   }
 };
+
+//this will delete a comment from the comments collection based on it's specific id
 const deleteComment = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -235,6 +249,7 @@ const deleteComment = async (request, response) => {
   }
 };
 
+//this will remove a single object from the favorite collection based on the object's id
 const deleteSingleObject = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -263,6 +278,8 @@ const deleteSingleObject = async (request, response) => {
     client.close();
   }
 };
+
+//this update favorite collection to it's default state, an empty array. 
 const deleteWholeCollection = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");

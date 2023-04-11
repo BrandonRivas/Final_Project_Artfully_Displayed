@@ -5,16 +5,23 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Loading from "./Loading";
 
 const NavBar = () => {
+  //this state tracks if the logo has been clicked
   const [isClicked, setIsClicked] = useState(false);
+  //this state tracks if the user is logged section is clicked
   const [isLogedin, setIsLogedin] = useState(false);
+  //this are the state provided from Auth0
+  //the loginWithRedirect will bring the user to login with Auth0'
+  //the logout function will log the user out
   const { loginWithRedirect, logout, isAuthenticated, user, isLoading } =
     useAuth0();
 
+  //this toggles if the logo to show the menu and hides the logout button
   const handleClick = () => {
     setIsClicked(!isClicked);
     setIsLogedin(false);
   };
 
+  //this will toggle the logout/login button and hides the logo menu
   const logoutClick = () => {
     setIsLogedin(!isLogedin);
     setIsClicked(false);

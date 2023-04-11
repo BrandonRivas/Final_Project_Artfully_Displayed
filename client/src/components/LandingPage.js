@@ -4,19 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { HiOutlineLightBulb } from "react-icons/hi";
 
 const LandingPage = () => {
+  //sets the x and y values of the mouse so that the shadow effect can work
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  //this toggles the spotlight on and off
   const [isSpotlightOn, setIsSpotlightOn] = useState(true);
 
   const navigate = useNavigate();
 
+  //this is the function that tracks the position of the mouse on the screen
   const handleMouseMove = (event) => {
     setMousePosition({ x: event.clientX, y: event.clientY });
   };
 
+  //this function toggles the spotlight on and off
   const handleClick = () => {
     setIsSpotlightOn(!isSpotlightOn);
   };
 
+  //the button at the center of the screen will lead us to the collection page on click
   const handleButton = (event) => {
     event.preventDefault();
     navigate("/collection");

@@ -100,7 +100,7 @@ const postComments = async (request, response) => {
 const createCollection = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
-  const { _id, favorite, collection } = request.body;
+  const { _id, favorite, intro } = request.body;
   try {
     const existingExhibit = await db.collection("exhibit").findOne({ _id });
     if (existingExhibit) {
@@ -112,7 +112,7 @@ const createCollection = async (request, response) => {
 
     const newExhibit = await db
       .collection("exhibit")
-      .insertOne({ _id, favorite, collection });
+      .insertOne({ _id, favorite, intro });
     return response.status(200).json({
       status: 200,
       message: "Your exhibit has been created",
@@ -186,6 +186,35 @@ const addToCollection = async (request, response) => {
   }
 };
 
+const updateIntro = async (request, response) => {
+  const client = new MongoClient(MONGO_URI, options);
+  const db = client.db("Website_Db");
+  const { id } = request.params;
+  const { intro } = request.body;
+  try {
+    const result = await db
+      .collection("exhibit")
+      .updateOne({ _id: id }, { $set: { intro } });
+    if (result.matchedCount === 0) {
+      response.status(404).json({
+        status: 404,
+        data: result,
+        message: "Your Collection was not found",
+      });
+    } else {
+      response.status(200).json({
+        status: 200,
+        data: result,
+        message: "Your intro was updated ",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ message: error.message });
+  } finally {
+    client.close();
+  }
+};
 const deleteComment = async (request, response) => {
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
@@ -272,4 +301,5 @@ module.exports = {
   addToCollection,
   deleteSingleObject,
   deleteWholeCollection,
+  updateIntro,
 };

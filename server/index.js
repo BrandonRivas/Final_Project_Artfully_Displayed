@@ -15,6 +15,7 @@ const {
   addToCollection,
   deleteSingleObject,
   deleteWholeCollection,
+  updateIntro,
 } = require("./handlers");
 express()
   .use(morgan("tiny"))
@@ -24,6 +25,7 @@ express()
   .get("/comments", getComments)
   .get("/mycollection/:id", getMyCollection)
   .patch("/mycollection/:id", addToCollection)
+  .patch("/intro/:id", updateIntro)
   .post("/comments", postComments)
   .post("/collection", createCollection)
   .delete("/comments/:id", deleteComment)

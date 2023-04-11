@@ -127,6 +127,7 @@ const CommentsDiv = styled.div`
   display: flex;
   align-items: center;
   padding: 10px;
+  opacity: 75%;
 `;
 
 const Comment = styled.p`
@@ -173,6 +174,7 @@ const ButtonDiv = styled.div`
 const Button = styled.button`
   padding: 10px 20px;
   margin-top: 10px;
+  margin-bottom: 10px;
   :hover {
     opacity: 50%;
   }

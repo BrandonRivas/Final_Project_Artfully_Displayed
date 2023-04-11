@@ -74,7 +74,6 @@ const Container = styled.div`
   position: absolute;
   margin-top: 30px;
   margin-left: 30px;
-  /* border: 2px solid red; */
   z-index: 6;
 `;
 const ListTitle = styled.p`
@@ -140,7 +139,6 @@ const LoginDiv = styled.div`
   font-size: 30px;
   opacity: 50%;
   transition: all 500ms cubic-bezier(0.3, 0.1, 0.3, 1);
-  /* Media query for screens smaller than 1800x994 */
   @media screen and (max-width: 1800px) {
     font-size: 26px;
   }

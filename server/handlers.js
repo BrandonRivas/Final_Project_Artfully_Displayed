@@ -236,7 +236,6 @@ const deleteComment = async (request, response) => {
 };
 
 const deleteSingleObject = async (request, response) => {
-  console.log("this is your delete params", request.params);
   const client = new MongoClient(MONGO_URI, options);
   const db = client.db("Website_Db");
   const { id, objectId } = request.params;

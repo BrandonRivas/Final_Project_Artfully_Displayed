@@ -35,3 +35,9 @@ Use `yarn start` to start the backend dev environment.
 ### Backend Server 
 
 The server is running on MongoDB using RESTful practices and features `GET`, `PATCH`, `POST`, and `DELETE` methods. 
+
+---
+
+[![display](client/public/display.png)](https://www.youtube.com/watch?v=MX4rT-rvlvI)
+
+Click to see video demonstration
